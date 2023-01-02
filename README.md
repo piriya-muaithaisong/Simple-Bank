@@ -42,4 +42,4 @@ Table transfer {
   }
 }
 ```
-
+![dbdiagram image](./database/Simple%20Bank.png)
