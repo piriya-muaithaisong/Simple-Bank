@@ -7,4 +7,4 @@ createdb:
 dropdb:
 	sudo docker exec -it postgres15 dropdb simple_bank
 
-.PHONY: createdb, dropdb, postgres_run
+.PHONY: postgres_run createdb dropdb 
