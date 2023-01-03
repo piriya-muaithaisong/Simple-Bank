@@ -19,7 +19,7 @@ Table accounts as A {
 
 Table entries {
   id bigserial [pk]
-  account_id bigint [ref: > A.id]
+  account_id bigint [not null, ref: > A.id]
   amount decimal [not null, note:'can be negative or positive']
   create_at timestamptz [not null,default: `now()`]
   
@@ -28,10 +28,10 @@ Table entries {
   }
 }
 
-Table transfer {
+Table transfers {
   id bigserial [pk]
-  from_account_id bigint [ref: > A.id]
-  to_account_id bigint [ref: > A.id]
+  from_account_id bigint [not null, ref: > A.id]
+  to_account_id bigint [not null, ref: > A.id]
   amount decimal [not null,  note:'must be positive']
   create_at timestamptz [not null, default: `now()`]
   
