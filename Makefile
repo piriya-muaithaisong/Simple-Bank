@@ -7,4 +7,10 @@ createdb:
 dropdb:
 	sudo docker exec -it postgres15 dropdb simple_bank
 
-.PHONY: postgres_run createdb dropdb 
+migrateup:
+	../migrate.linux-amd64 -path ./database/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose up
+
+migratedown:
+	../migrate.linux-amd64 -path ./database/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose down
+
+.PHONY: postgres_run createdb dropdb migrateup migratedown
