@@ -20,8 +20,8 @@ func createRandomEntry(t *testing.T, account Account) Entry {
 	require.NotEmpty(t, entry)
 	require.Equal(t, entry.AccountID, args.AccountID)
 	require.Equal(t, entry.Amount, args.Amount)
-	require.NotEmpty(t, entry.ID)
-	require.NotEmpty(t, entry.CreateAt)
+	require.NotZero(t, entry.ID)
+	require.NotZero(t, entry.CreateAt)
 
 	return entry
 }
