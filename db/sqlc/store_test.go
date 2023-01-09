@@ -14,7 +14,7 @@ func TestTransferTx(t *testing.T) {
 
 	//run concurrent transfer transaction
 	n := 5
-	amount := "10"
+	var amount int64 = 10
 
 	errs := make(chan error)
 	results := make(chan TransferTxResult)
@@ -55,7 +55,7 @@ func TestTransferTx(t *testing.T) {
 		fromEntry := result.FromEntry
 		require.NotEmpty(t, fromEntry)
 		require.Equal(t, account1.ID, fromEntry.AccountID)
-		require.Equal(t, "-"+amount, fromEntry.Amount)
+		require.Equal(t, -amount, fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreateAt)
 
@@ -73,7 +73,19 @@ func TestTransferTx(t *testing.T) {
 		require.NoError(t, err)
 
 		//check account balance
+		fromAccount := result.FromAccount
+		require.NotEmpty(t, fromAccount)
+		require.Empty(t, account1.ID, fromAccount.ID)
 
+		toAccount := result.ToAccount
+		require.NotEmpty(t, toAccount)
+		require.Empty(t, account2.ID, toAccount.ID)
+
+		diff1 := account1.Balance - fromAccount.Balance
+		diff2 := toAccount.Balance - account2.Balance
+		require.Equal(t, diff1, diff2)
+		require.True(t, diff1 > 0)
+		require.True(t, diff1%amount == 0)
 	}
 
 }
