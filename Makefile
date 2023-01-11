@@ -8,10 +8,10 @@ dropdb:
 	sudo docker exec -it postgres15 dropdb simple_bank
 
 migrateup:
-	../migrate.linux-amd64 -path ./db/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate.linux-amd64 -path ./db/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
 migratedown:
-	../migrate.linux-amd64 -path ./db/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate.linux-amd64 -path ./db/migration -database "postgresql://root:mysecretpassword@localhost:5432/simple_bank?sslmode=disable" -verbose down
 
 sqlc:
 	sqlc generate
