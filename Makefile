@@ -1,6 +1,9 @@
 postgres_run:
 	sudo docker run --name postgres15 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=mysecretpassword -d postgres:15-alpine
 
+postgres_start:
+	sudo docker start 97
+
 createdb:
 	sudo docker exec -it postgres15 createdb --username=root --owner=root simple_bank
 
@@ -22,4 +25,4 @@ test:
 server:
 	go run main.go
 
-.PHONY: postgres_run createdb dropdb migrateup migratedown sqlc db server
+.PHONY: postgres_run createdb dropdb migrateup migratedown sqlc db server postgres_start
