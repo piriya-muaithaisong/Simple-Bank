@@ -6,7 +6,7 @@ import (
 )
 
 var ErrExpiredToken = errors.New("token has expired")
-var ErrIvalidToken = errors.New("token is invalid")
+var ErrInvalidToken = errors.New("token is invalid")
 
 type Maker interface {
 	CreateToken(username string, duration time.Duration) (string, error)
