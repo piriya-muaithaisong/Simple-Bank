@@ -13,16 +13,16 @@ dropdb:
 	sudo docker exec -it postgres15 dropdb simple_bank
 
 migrateup:
-	migrate -path ./db/migration -database "$(DB_URl)" -verbose up
+	migrate -path ./db/migration -database "$(DB_URL)" -verbose up
 
 migratedown:
-	migrate -path ./db/migration -database "$(DB_URl)" -verbose down
+	migrate -path ./db/migration -database "$(DB_URL)" -verbose down
 
 migratedown1:
-	migrate -path ./db/migration -database "$(DB_URl)" -verbose down 1
+	migrate -path ./db/migration -database "$(DB_URL)" -verbose down 1
 
 migrateup1:
-	migrate -path ./db/migration -database "$(DB_URl)" -verbose up 1
+	migrate -path ./db/migration -database "$(DB_URL)" -verbose up 1
 
 sqlc:
 	sqlc generate
