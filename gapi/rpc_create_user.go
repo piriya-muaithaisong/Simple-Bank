@@ -40,6 +40,3 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	return rsp, nil
 }
-func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (*pb.LoginUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
-}
