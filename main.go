@@ -6,6 +6,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/lib/pq"
 	"github.com/piriya-muaithaisong/Simple-Bank/api"
@@ -30,6 +33,8 @@ func main() {
 	if err != nil {
 		log.Println("cannot connect to the database", err)
 	}
+
+	runDBMigration(config.MigrationURL, config.DBSource)
 
 	store := db.NewStore(conn)
 	go runGatewayServer(config, store)
@@ -119,4 +124,15 @@ func runGatewayServer(config utils.Config, store db.Store) {
 		log.Fatal("cannot start HTTP gateway server: ", err)
 	}
 
+}
+
+func runDBMigration(migrationURL string, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal("cannot create new migrate instance: ", err)
+	}
+	if err := migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate up:", err)
+	}
+	log.Println("db migrated successfully")
 }
