@@ -10,9 +10,11 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/piriya-muaithaisong/Simple-Bank/api"
 	db "github.com/piriya-muaithaisong/Simple-Bank/db/sqlc"
+	_ "github.com/piriya-muaithaisong/Simple-Bank/doc/statik"
 	"github.com/piriya-muaithaisong/Simple-Bank/gapi"
 	"github.com/piriya-muaithaisong/Simple-Bank/pb"
 	"github.com/piriya-muaithaisong/Simple-Bank/utils"
+	"github.com/rakyll/statik/fs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -97,8 +99,13 @@ func runGatewayServer(config utils.Config, store db.Store) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	fs := http.FileServer(http.Dir("./doc/swagger"))
-	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal("cannot get statik fs: ", err)
+	}
+
+	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
+	mux.Handle("/swagger/", swaggerHandler)
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
