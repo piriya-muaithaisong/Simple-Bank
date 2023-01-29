@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 
@@ -36,4 +37,29 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendVerifyEmail(
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retry", info.Retried).Msg("enqueue task ")
 	return nil
 
+}
+
+func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, task asynq.Task) error {
+	var payload PayloadSendVerifyEmail
+	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
+		return fmt.Errorf("failed to unmarshal payload: %w", asynq.SkipRetry)
+	}
+
+	user, err := processor.store.GetUser(ctx, payload.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("user doesn't exist %w", asynq.SkipRetry)
+		}
+
+		return fmt.Errorf("failed to get user: %w", err)
+	}
+
+	//TODO: send email to the user
+
+	log.Info().Str("type", task.Type()).
+		Bytes("payload", task.Payload()).
+		Str("email", user.Email).
+		Msg("process task")
+
+	return nil
 }
